@@ -23,8 +23,9 @@ jobs:
         working-directory: ./TodoListClient
         run: dotnet build TodoListClient.csproj --configuration Release --no-restore -p:Version=1.0.${{ env.BUILD_NUMBER }}
 
-             
-      - run: dotnet publish ./msalopenid-example/TodoListClient/TodoListClient.csproj --configuration Release --no-build --output ./publish
+      - name: Publish
+        working-directory: ./TodoListClient     
+        run: dotnet publish TodoListClient.csproj --configuration Release --no-build --output ./publish
 
       - uses: actions/upload-artifact@v4
         with:
