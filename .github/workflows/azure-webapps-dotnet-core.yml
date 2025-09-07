@@ -16,7 +16,7 @@ jobs:
         run: echo "BUILD_NUMBER=${{ github.run_number }}" >> $GITHUB_ENV
 
       - name: Build
-        working-directory: ./msalopenid-example/TodoListClient
+        working-directory: ./TodoListClient
         run: dotnet build TodoListClient.csproj --configuration Release --no-restore -p:Version=1.0.${{ env.BUILD_NUMBER }}
 
              
