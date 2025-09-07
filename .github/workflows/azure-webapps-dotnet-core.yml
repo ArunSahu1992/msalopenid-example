@@ -36,6 +36,9 @@ jobs:
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      - name: Set subscription
+        run: az account set --subscription 43835338-d674-4761-b456-a0530ef69a6c
 
       - name: Upload to Azure Blob
         uses: azure/CLI@v2
