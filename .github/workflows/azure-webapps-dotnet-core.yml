@@ -32,6 +32,11 @@ jobs:
           name: myapp-${{ env.BUILD_NUMBER }}
           path: ./TodoListClient/publish/**
 
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Upload to Azure Blob
         uses: azure/CLI@v2
         with:
