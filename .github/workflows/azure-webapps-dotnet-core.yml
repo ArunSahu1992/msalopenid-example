@@ -12,6 +12,10 @@ jobs:
         with:
           dotnet-version: '8.x'
 
+      - name: Restore dependencies
+        working-directory: ./TodoListClient
+        run: dotnet restore TodoListClient.csproj
+        
       - name: Set Build Number
         run: echo "BUILD_NUMBER=${{ github.run_number }}" >> $GITHUB_ENV
 
