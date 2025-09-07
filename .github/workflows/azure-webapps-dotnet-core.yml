@@ -31,3 +31,15 @@ jobs:
         with:
           name: myapp-${{ env.BUILD_NUMBER }}
           path: ./TodoListClient/publish/**
+
+      - name: Upload to Azure Blob
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            az storage blob upload-batch \
+              --connection-string ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }} \
+              --destination builds/myapp \
+              --source ./TodoListClient/publish \
+              --pattern "*" \
+              --overwrite
+            echo "Uploaded build $BUILD_NUMBER"
