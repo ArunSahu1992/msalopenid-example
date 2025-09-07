@@ -1,0 +1,24 @@
+# ci.yml
+name: CI Build
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Set Build Number
+        run: echo "BUILD_NUMBER=${{ github.run_number }}" >> $GITHUB_ENV
+
+      - run: dotnet build -c Release /p:Version=1.0.${{ env.BUILD_NUMBER }}
+      - run: dotnet publish -c Release -o publish /p:Version=1.0.${{ env.BUILD_NUMBER }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: myapp-${{ env.BUILD_NUMBER }}
+          path: publish/**
