@@ -1,0 +1,39 @@
+name: Deploy with Publish Profile
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_number:
+        description: 'Build number to deploy'
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Download build from Blob (since your builds are stored there)
+      - name: Download build from Blob
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            mkdir -p ./downloaded-build
+            az storage blob download-batch \
+              --connection-string "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" \
+              --source builds \
+              --pattern "myapp/${{ github.event.inputs.build_number }}/*" \
+              --destination ./downloaded-build \
+              --overwrite
+
+            echo "Downloaded build ${{ github.event.inputs.build_number }}"
+
+      # Deploy using Publish Profile
+      - name: Deploy to Azure WebApp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: "mygithubwfapp"  # replace with your Web App name
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./downloaded-build
