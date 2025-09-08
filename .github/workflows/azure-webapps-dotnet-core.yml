@@ -39,15 +39,14 @@ jobs:
       
       - name: Set subscription
         run: az account set --subscription 43835338-d674-4761-b456-a0530ef69a6c
-
+        
       - name: Upload to Azure Blob
         uses: azure/CLI@v2
         with:
           inlineScript: |
             az storage blob upload-batch \
-              --connection-string ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }} \
-              --destination builds/myapp \
+              --connection-string "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" \
+              --destination builds/myapp/${{ env.BUILD_NUMBER }} \
               --source ./TodoListClient/publish \
-              --pattern "*" \
               --overwrite
-            echo "Uploaded build $BUILD_NUMBER"
+            echo "Uploaded build ${{ env.BUILD_NUMBER }}"
